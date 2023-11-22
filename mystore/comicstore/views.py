@@ -19,35 +19,14 @@ from comicstore.serializer import *
 
 
 
-class ProductList(ModelViewSet): #все операции CRUD в одной этой вьюшке
+class ProductList(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
-    # def post(self, request):
-    #     serializer = ProductSerializer(data=request.data)
-    #     if serializer.is_valid(raise_exception=True):
-    #         serializer.save()
-    #     return Response({'product': serializer.data})
-
-#--------------------------------------------------------операции CRUD разбиты на три вьюшки
-# class ProductAPIList(generics.ListCreateAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
 
 
-# class ProductAPIUpdate(generics.RetrieveUpdateAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
-
-
-# class ProductAPIDestroy(generics.RetrieveDestroyAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
-#--------------------------------------------------------
-
-
-class AuthorViewSet(ModelViewSet): #также не думаю, что пока мне нужны эти второстепенные view, поскольку я пока работаю только с главной model Product
+class AuthorViewSet(ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
 
@@ -77,7 +56,7 @@ class UserCreateViewSet(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
     def create_user(request):
-        serializer = UserCreateSerializer(data=request.data) # на основе тех данных, которые поступили с post запросом. request.data works for 'POST', 'PUT' and 'PATCH' methods
+        serializer = UserCreateSerializer(data=request.data) 
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -89,39 +68,20 @@ class UserCreateViewSet(generics.ListCreateAPIView):
             {'data': serializer.errors},
             status=status.HTTP_400_BAD_REQUEST
         )
-        # queryset = User.objects.all()
-        # serializer_class = UserCreateSerializer
-
-# @api_view(['POST'])
-# def create_user(request):
-#     serializer = UserCreateSerializer(data=request.data)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response(
-#             {'data': serializer.data},
-#             status=status.HTTP_201_CREATED
-#         )
-
-#     return Response(
-#         {'data': serializer.errors},
-#         status=status.HTTP_400_BAD_REQUEST
-    # )
-
 
 
     
-class MyTokenObtainPairView(TokenObtainPairView): # Мы костамизировали наш tokenObtainPairView, чтобы выводить имя_пользователя, а не только его id
+class MyTokenObtainPairView(TokenObtainPairView): 
     serializer_class = MyTokenObtainPairSerializer
 
 
 class UserInfoViewSet(ModelViewSet):
     serializer_class = UserInfoSerializer
     queryset = User.objects.all()
-    # permission_classes = (IsAuthenticated, )
     def user_info(request, pk):
         user = User.objects.get(id=pk)
         user_info = User.objects.filter(User=user)
-        if request.user.is_authenticated: # ну типо проверяю если текущий пользователь авторизован
+        if request.user.is_authenticated:
             return user_info
         else:
             return Response(

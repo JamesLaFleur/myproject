@@ -45,7 +45,6 @@ class Product_details(models.Model):
     circulation = models.IntegerField('Тираж')
     age_restrictions = models.IntegerField()
     isbn = models.IntegerField()
-    
 
 
 
