@@ -1,5 +1,6 @@
 from django.db import models
 
+from django.contrib.auth.models import User
 
 class Author(models.Model):
     author_name = models.CharField(max_length=50)
@@ -31,6 +32,9 @@ class Genre(models.Model):
 class Publisher(models.Model):
     publisher_name = models.CharField(max_length=40)
 
+    def __str__(self) -> str:
+        return self.publisher_name
+
 
 class Product_details(models.Model):
     pages = models.IntegerField()
@@ -41,17 +45,7 @@ class Product_details(models.Model):
     circulation = models.IntegerField('Тираж')
     age_restrictions = models.IntegerField()
     isbn = models.IntegerField()
-    # def __init__(self, id, pages, height, width, weight, publish_date, circulation, age_restrictions, isbn):
-    #     self.pages = pages
-    #     self.id = id
-    #     self.height = height
-    #     self.width = width
-    #     self.weight = weight
-    #     self.publish_date = publish_date
-    #     self.circulation = circulation
-    #     self.age_restrictions = age_restrictions
-    #     self.isbn = isbn
-        #f'{self.pages}{self.height}{self.width}{self.weight}{self.publish_date}{self.circulation}{self.age_restrictions}{self.isbn}'
+    
 
 
 
@@ -66,10 +60,6 @@ class Product(models.Model):
     genre = models.ForeignKey(Genre, related_name='genres', on_delete=models.CASCADE)
     prod_details = models.OneToOneField(Product_details, related_name='details', on_delete=models.CASCADE)
     language = models.ForeignKey(Language,related_name='languages', on_delete=models.CASCADE)
-
-   
-
-
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
